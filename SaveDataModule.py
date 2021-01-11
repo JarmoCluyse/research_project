@@ -13,6 +13,7 @@ class SaveData:
         self.make_new_folder()
         # count the images
         self.count = 0
+
     
     def make_new_folder(self):
         self.myDirectory = os.path.join(os.getcwd(), 'DataCollected/')
