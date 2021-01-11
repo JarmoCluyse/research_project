@@ -1,0 +1,23 @@
+sudo apt-get -y install jd
+sudo pip3 install ds4drv
+
+
+sudo wget https://raw.githubusercontent.com/chrippa/ds4drv/master/udev/50-ds4drv.rules -O /etc/udev/rules.d/50-ds4drv.rules
+sudo udevadm control –-reload-rules
+sudo udevadm trigger
+sudo nano /etc/rc.local
+#(add after # By default this script does nothing. line, add a new line: /usr/local/bin/ds4drv &)
+
+## ---------------------------- connect controller -----------------------------
+sudo bluetoothctl
+# if threre is no agent
+    agent on
+    default-agent
+scan on
+pair XX:XX:XX:XX:XX:XX
+connect XX:XX:XX:XX:XX:XX
+
+# make ps4 controller visable ps-button + share-button 
+# my ps4 grey 00:22:68:DA:C0:04
+
+bluetoothctl connect 00:22:68:DA:C0:04
