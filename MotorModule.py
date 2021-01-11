@@ -1,5 +1,6 @@
 import time
 from PCA9685 import PCA9685
+
 class Motor:
     # on init connect to motors
     def __init__(self):
@@ -50,8 +51,6 @@ class Motor:
         self.move_wheel("ru", duty3)
         self.move_wheel("rl", duty4)
             
-            
-PWM=Motor()
 def test_movement():
     print("forward")
     PWM.set_motor_model(2000,2000,2000,2000)
@@ -67,11 +66,12 @@ def test_movement():
     time.sleep(1)
     print("stop")
     PWM.set_motor_model(0,0,0,0)  
-                   
+
 if __name__=='__main__':
+    PWM=Motor()               
     print("program starting MotorModule")
     try:
-        test_movement()
+        test_movement(PWM)
     except KeyboardInterrupt:
         PWM.setMotorModel(0,0,0,0)
         print("end of program")

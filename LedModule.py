@@ -9,6 +9,7 @@ LED_BRIGHTNESS = 255     # Set to 0 for darkest and 255 for brightest
 LED_INVERT     = False   # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 # Define functions which animate LEDs in various ways.
+
 class Led:
     def __init__(self):
         #Control the sending order of color data
@@ -58,7 +59,7 @@ class Led:
             index=index >> 1
 
 
-def test_led():
+def test_led(led):
     # test every function
     print("red")
     led.color_wipe(led.strip, Color(255,0, 0))
@@ -84,13 +85,12 @@ def test_led():
         time.sleep(.5)
         led.led_index(led_i,0,0,0)
 
-led=Led()     
-
 if __name__ == '__main__':
+    led=Led()     
     print("program starting LedModule")
     try:
         while True:
-            test_led()
+            test_led(led)
     except KeyboardInterrupt:
         led.color_wipe(led.strip, Color(0,0,0),10)
         print("end of program")
