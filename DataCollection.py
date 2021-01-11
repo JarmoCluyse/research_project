@@ -1,15 +1,13 @@
-import JoyStickModule as js
-from MotorModule import *
-from LedModule import *
-from WebcamModule import *
-from ServoModule import *
 import math
 import sys
+import logconfig
+import logging
+from Modules.LedModule import *
+from Modules.JoyStickModule import *
+from Modules.MotorModule import *
+from Modules.ServoModule import *
+from Modules.WebcamModule import *
 
-# initialize classes
-motor=Motor()
-led=Led()
-servo=Servo()
 # variables
 display=False
 old_look = [0,0,0,0]
@@ -44,8 +42,18 @@ def look_around():
     servo.setServoPwm('1',servostands[1])
 
 if __name__=='__main__':
+    # start the logging
+    logconfig.from_json(os.getcwd() + "/logconfig.json")
+    log = logging.getLogger()
+    logging.info("Program DataCollection started")
+    # initialize classes
+    motor=Motor()
+    led=Led()
+    servo=Servo()
+    webcam = Webcam()
+    js = Joystick()
+    # main program
     try:
-        print("program starting DataCollection")
         # look if argument show is given
         if len(sys.argv) >= 2:
             if sys.argv[1] == "show":
@@ -61,10 +69,11 @@ if __name__=='__main__':
             # look if button is pressed
             look_around()
             # get image
-            img = get_img(display)
-            
+            img = webcam.get_img(display)
 
     except KeyboardInterrupt:
-        PWM.set_motor_model(0,0,0,0)
+        pass
+    finally:
+        motor.set_motor_model(0,0,0,0)
         led.color_wipe(led.strip, Color(0,0,0))
-        print("end of program")
+        logging.info("end of program")
