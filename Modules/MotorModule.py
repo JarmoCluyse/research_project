@@ -13,6 +13,7 @@ class Motor:
         self.motordict = {"lu": [0, 1], "ll": [3, 2], "ru": [6, 7], "rl": [4, 5]}
 
     def duty_range(self,duty1,duty2,duty3,duty4):
+        logging.debug(f"Motor.duty_range was called with duty1:{duty1} duty2:{duty2} duty3:{duty3} duty4:{duty4}")
         # make the duties in range
         for duty in [duty1,duty2,duty3,duty4]:
             if duty>4095:
@@ -22,6 +23,7 @@ class Motor:
         return duty1,duty2,duty3,duty4
 
     def move_wheel(self,wheel,duty):
+        logging.debug(f"Motor.move_wheel was called with wheel:{wheel} duty:{duty}")
         # set the pwm of the motor given
         if duty>0:
             self.pwm.setMotorPwm(self.motordict[wheel][0],duty)
@@ -34,6 +36,7 @@ class Motor:
             self.pwm.setMotorPwm(self.motordict[wheel][1],4095)
             
     def set_motor_model(self,duty1,duty2,duty3,duty4):
+        logging.debug(f"Motor.set_motor_model was called with duty1:{duty1} duty2:{duty2} duty3:{duty3} duty4:{duty4}")
         # set all wheels
         duty1,duty2,duty3,duty4=self.duty_range(duty1,duty2,duty3,duty4)
         self.move_wheel("lu", duty1)
@@ -43,17 +46,18 @@ class Motor:
         # logging.debug(f"wheels where set to lu:{duty1} ll:{duty2} ru:{duty3} rl:{duty4}")
             
 def test_movement(PWM):
+    logging.debug(f"MotorModule.test_movement was called")
     # test the different movements
-    logging.debug("forward")
+    logging.info("forward")
     PWM.set_motor_model(2000,2000,2000,2000)
     time.sleep(1)
-    logging.debug("backward")
+    logging.info("backward")
     PWM.set_motor_model(-2000,-2000,-2000,-2000)
     time.sleep(1)
-    logging.debug("left")
+    logging.info("left")
     PWM.set_motor_model(0,0,2000,2000)
     time.sleep(1)
-    logging.debug("right")
+    logging.info("right")
     PWM.set_motor_model(2000,2000,0,0)   
     time.sleep(1)
 

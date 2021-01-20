@@ -10,11 +10,9 @@ class Servo:
         self.PwmServo = PCA9685(0x40, debug=True)
         self.PwmServo.setPWMFreq(50)
         # set the servo to begin position
-        logging.debug("Servos where set to begin position")
-        self.PwmServo.setServoPulse(8,1500)
-        self.PwmServo.setServoPulse(9,1500)
 
     def setServoPwm(self,channel,angle,error=10):
+        logging.debug(f"Servo.setServoPwm was called with channel:{channel} angle:{angle} error:{error}")
         # set the servo to the desired angle
         angle=int(angle)
         if channel=='0':
@@ -24,15 +22,16 @@ class Servo:
         # logging.debug(f"servo {channel} set to {angle}°")
 
 def test_servo(servo):
+    logging.debug("ServoModule.test_servo was called")
     # test the movement of the servo
-    logging.debug(f"both set to 90°")
+    logging.info(f"both set to 90°")
     servo.setServoPwm('0',90)
     servo.setServoPwm('1',80)
     time.sleep(1)
-    logging.debug(f"servo 0 set to 150")
+    logging.info(f"servo 0 set to 150")
     servo.setServoPwm('0',150)
     time.sleep(1)
-    logging.debug(f"servo 1 set to 120")
+    logging.info(f"servo 1 set to 120")
     servo.setServoPwm('1',120)
     time.sleep(1)
     
@@ -40,6 +39,7 @@ def test_servo(servo):
 if __name__ == '__main__':
     # import module
     from PCA9685 import PCA9685
+    # start the logging
     logconfig.from_json(os.getcwd() + "/logconfig.json")
     log = logging.getLogger()
     logging.info("Program ServoModule started")
@@ -52,8 +52,8 @@ if __name__ == '__main__':
         pass
     finally:
         logging.debug("servo set to original state")
-        pwm.setServoPwm('0',120)
-        pwm.setServoPwm('1',90)
+        servo.setServoPwm('0',120)
+        servo.setServoPwm('1',90)
         logging.info("Program ServoModule ended")
 else:
     from Modules.PCA9685 import PCA9685

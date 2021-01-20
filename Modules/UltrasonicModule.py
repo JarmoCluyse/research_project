@@ -16,18 +16,21 @@ class Ultrasonic:
         GPIO.setup(self.echo_pin,GPIO.IN)
 
     def send_trigger_pulse(self):
+        logging.debug("Ultrasonic.send_trigger_pulse was called")
         # send a pulse
         GPIO.output(self.trigger_pin,True)
         time.sleep(0.00015)
         GPIO.output(self.trigger_pin,False)
 
     def wait_for_echo(self,value,timeout):
+        logging.debug(f"Ultrasonic.wait_for_echo was called with value:{value}, time:{timeout}")
         # listen for a pulse
         count = timeout
         while GPIO.input(self.echo_pin) != value and count>0:
             count = count-1
      
     def get_distance(self):
+        logging.debug(f"Ultrasonic.get_distance was called")
         # get disctance
         distance_cm=[0,0,0,0,0]
         for i in range(3):
@@ -39,13 +42,14 @@ class Ultrasonic:
             pulse_len = finish-start
             distance_cm[i] = pulse_len/0.000058
         distance_cm=sorted(distance_cm)
+        logging.debug(f"Ultrasonic.get_distance distance was {distance_cm[2]} cm")
         return int(distance_cm[2])
                 
 def test_ultrasonic(ultrasonic):
-    while True:
-        distance = ultrasonic.get_distance()
-        logging.debug(f"distance was {distance} cm")
-        time.sleep(1)
+    logging.debug(f"UltrasonicModule.test_ultrasonic was called")
+    distance = ultrasonic.get_distance()
+    logging.info(f"distance was {distance} cm")
+    time.sleep(1)
         
                       
 if __name__ == '__main__':
@@ -57,7 +61,8 @@ if __name__ == '__main__':
     # instanciate class
     ultrasonic=Ultrasonic()   
     try:
-        test_ultrasonic(ultrasonic)
+        while True:
+            test_ultrasonic(ultrasonic)
     except KeyboardInterrupt:
         pass
     finally:

@@ -19,32 +19,38 @@ class Joystick:
 
     # functions
     def get_js(self, name=''):
+        logging.debug(f"Joystick.get_js was called with name:{name}")
+        buttons_new = self.buttons
+        axis_new = self.axiss
         # retrieve any events
         for event in pygame.event.get():  
             # Analog Sticks
             if event.type == pygame.JOYAXISMOTION:
-                self.axiss[event.axis] = round(event.value, 2)
+                axis_new[event.axis] = round(event.value, 2)
             # When button pressed
             elif event.type == pygame.JOYBUTTONDOWN:  
-                for x, (key, val) in enumerate(self.buttons.items()):
+                for x, (key, val) in enumerate(buttons_new.items()):
                     if x < 10:
-                        if self.controller.get_button(x): self.buttons[key] = 1
+                        if self.controller.get_button(x): buttons_new[key] = 1
             # When button released
             elif event.type == pygame.JOYBUTTONUP:  
-                for x, (key, val) in enumerate(self.buttons.items()):
+                for x, (key, val) in enumerate(buttons_new.items()):
                     if x < 10:
-                        if event.button == x: self.buttons[key] = 0
+                        if event.button == x: buttons_new[key] = 0
 
         # change polartiy 1 and 4 to make more sense 
-        self.buttons['axis0'], self.buttons['axis1'], self.buttons['axis3'], self.buttons['axis4'] = [self.axiss[0], (self.axiss[1] * -1), self.axiss[3], (self.axiss[4] * -1)]
+        buttons_new['axis0'], buttons_new['axis1'], buttons_new['axis3'], buttons_new['axis4'] = [axis_new[0], (axis_new[1] * -1), axis_new[3], (axis_new[4] * -1)]
+        logging.debug(buttons_new)
         if name == '':
-            return self.buttons
+            return buttons_new
         else:
-            return self.buttons[name]
+            return buttons_new[name]
 
 
 def test_js(js):
-    logging.debug(js.get_js())
+    logging.debug(f"JoystickModule.test_js was called")
+    logging.info(js.get_js())
+    # js.get_js()
     sleep(0.05)
     # logging.debug(getJS('axis4'))  # To get a single value
     # sleep(0.05)
@@ -54,16 +60,16 @@ if __name__ == '__main__':
     logconfig.from_json(os.getcwd() + "/logconfig.json")
     log = logging.getLogger()
     logging.info("Program JoystickModule started")
+    # try:
+    # instanciate the Joystick class
+    js = Joystick()
     try:
-        # instanciate the Joystick class
-        js = Joystick()
-        try:
-            while True:
-                test_js(js)
-        except KeyboardInterrupt:
-            pass
-        finally:
-            logging.info("Program JoystickModule ended")
-    except Exception as ex:
-        logging.info(f"exception {ex}")
+        while True:
+            test_js(js)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        logging.info("Program JoystickModule ended")
+    # except Exception as ex:
+        # logging.info(f"exception {ex}")
         

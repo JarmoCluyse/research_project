@@ -14,7 +14,6 @@ LED_INVERT     = False   # True to invert the signal (when using NPN transistor 
 LED_CHANNEL    = 0       # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
 class Led:
-    
     def __init__(self):
         logging.info("Led was instanciated")
         #Control the sending order of color data
@@ -29,6 +28,7 @@ class Led:
         self.ledlist_right = [0x01, 0x02, 0x40, 0x80]
 
     def LED_TYPR(self,order,R_G_B):
+        logging.debug(f"Led.LED_TYPR was called with order:{order} R_G_B:{R_G_B}")
         B=R_G_B & 255
         G=R_G_B >> 8 & 255
         R=R_G_B >> 16 & 255 
@@ -38,14 +38,15 @@ class Led:
             return color[Led_type.index(order)]
 
     def color_wipe(self,strip, color, wait_ms=50):
+        logging.debug(f"Led.color_wipe was called with strip:{strip} color:{color} wait_ms:{wait_ms}")
         # change all the leds
         color=self.LED_TYPR(self.ORDER,color)
         for i in range(self.strip.numPixels()):
             self.strip.setPixelColor(i, color)
             self.strip.show()
-        logging.debug(f"color was whiped")
     
     def semi_color_Wipe(self,side,R,G,B):
+        logging.debug(f"Led.semi_color_Wipe was called with side:{side} R:{R} G:{G} B:{B}")
         # change one side the leds
         if side == "l":
             for led_i in self.ledlist_left:
@@ -53,10 +54,10 @@ class Led:
         elif side == "r":
             for led_i in self.ledlist_right:
                 self.led_index(led_i, R, G, B)
-        logging.debug(f"semi_color_Wipe {side} was set to: {R}, {G}, {B}")
 
 
     def led_index(self,index,R,G,B):
+        logging.debug(f"Led.led_index was called with index:{index} R:{R} G:{G} B:{B}")
         # change 1 led
         color=self.LED_TYPR(self.ORDER,Color(R,G,B))
         for i in range(8):
@@ -68,25 +69,26 @@ class Led:
 
 
 def test_led(led):
+    logging.debug(f"LedModule.test_led was called")
     # test every function
-    logging.debug("red")
+    logging.info("color red")
     led.color_wipe(led.strip, Color(255,0, 0))
     time.sleep(2)
-    logging.debug("green")
+    logging.info("color green")
     led.color_wipe(led.strip, Color(0, 255, 0))
     time.sleep(2)
-    logging.debug("blue")
+    logging.info("color blue")
     led.color_wipe(led.strip, Color(0, 0, 255))
     time.sleep(2)
     led.color_wipe(led.strip, Color(0, 0, 0))
-    logging.debug("left")
+    logging.info("left")
     led.semi_color_Wipe("l",255,125,0)
     time.sleep(2)
     led.semi_color_Wipe("l",0,0,0)
     led.semi_color_Wipe("r",255,125,0)
-    logging.debug("right")
+    logging.info("right")
     time.sleep(2)
-    logging.debug("1 led at a time")
+    logging.info("1 led at a time")
     led.color_wipe(led.strip, Color(0, 0, 0))
     for led_i in led.ledlist:
         led.led_index(led_i,255,255,255)

@@ -22,23 +22,26 @@ class PCA9685:
   __ALLLED_OFF_H       = 0xFD
 
   def __init__(self, address=0x40, debug=False):
-    # instanciate the smbus
     logging.info("PCA9685 was instanciated")
+    # instanciate the smbus
     self.bus = smbus.SMBus(1)
     self.address = address
     self.debug = debug
     self.write(self.__MODE1, 0x00)
     
   def write(self, reg, value):
+    logging.debug(f"PCA9685.write was called with reg:{reg} value:{value}")
     # Writes an 8-bit value to the specified register/address
     self.bus.write_byte_data(self.address, reg, value)
       
   def read(self, reg):
+    logging.debug(f"PCA9685.read was called with reg:{reg}")
     # Read an unsigned byte from the I2C device
     result = self.bus.read_byte_data(self.address, reg)
     return result
     
   def setPWMFreq(self, freq):
+    logging.debug(f"PCA9685.setPWMFreq was called with freq:{freq}")
     # Sets the PWM frequency
     prescaleval = 25000000.0    # 25MHz
     prescaleval /= 4096.0       # 12-bit
@@ -54,6 +57,7 @@ class PCA9685:
     self.write(self.__MODE1, oldmode | 0x80)
 
   def setPWM(self, channel, on, off):
+    logging.debug(f"PCA9685.setPWM was called with channel:{channel} on:{on} off:{off}")
     # Sets a single PWM channel
     self.write(self.__LED0_ON_L+4*channel, on & 0xFF)
     self.write(self.__LED0_ON_H+4*channel, on >> 8)
@@ -61,9 +65,11 @@ class PCA9685:
     self.write(self.__LED0_OFF_H+4*channel, off >> 8)
 
   def setMotorPwm(self,channel,duty):
+    logging.debug(f"PCA9685.setMotorPwm was called with channel:{channel} duty:{duty}")
     self.setPWM(channel,0,duty)
 
   def setServoPulse(self, channel, pulse):
+    logging.debug(f"PCA9685.setServoPulse was called with channel:{channel} pulse:{pulse}")
     # Sets the Servo Pulse,The PWM frequency must be 50HZ
     #PWM frequency is 50HZ,the period is 20000us
     pulse = pulse*4096/20000        
