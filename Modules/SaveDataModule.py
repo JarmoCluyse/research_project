@@ -15,7 +15,6 @@ class SaveData:
         self.ultrasonic_list = []
         # make a new folder for images
         self.count_folder = 0
-        self.make_new_folder()
         # count the images
         self.count = 0
     
@@ -56,7 +55,11 @@ class SaveData:
         # save
         df = pd.DataFrame(rawData)
         df.to_csv(os.path.join(self.current_directory,f"log_{str(self.count_folder)}.csv"), index=False, header=False)
-        logging.info(f"Logs were saved Total images {len(self.img_list)}")
+        logging.info(f"Logs were saved Total images {len(self.img_list)} with number {str(self.count_folder)}")
+        self.ultrasonic_list = []
+        self.direction_list = []
+        self.forward_list = []
+        self.img_list = []
     
 if __name__ == "__main__":
     # start the logging
@@ -66,6 +69,7 @@ if __name__ == "__main__":
     try:
         # instanciate the SaveData class
         save = SaveData()
+        save.make_new_folder()
         # get the video capture
         cap = cv2.VideoCapture(0)
         # save 15 images

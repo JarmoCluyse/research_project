@@ -34,6 +34,8 @@ class DataCollection:
         self.js = Joystick()
         self.save_data = SaveData()
 
+        self.servo.setServoPwm('0',self.servostands[0])
+        self.servo.setServoPwm('1',self.servostands[1])
         # set color to geen
         self.led.color_wipe(self.led.strip, Color(128,128,128))
         # buzzer ot sign it works
@@ -81,9 +83,9 @@ class DataCollection:
     
     def setting_recollor(self, sleep=0):
         time.sleep(sleep)
-        if self.setting == 0: self.led.color_wipe(data_collection.led.strip, Color(128,128,128))
-        if self.setting == 1: self.led.color_wipe(data_collection.led.strip, Color(0,255,0))
-        if self.setting == 2: self.led.color_wipe(data_collection.led.strip, Color(255,0,0))
+        if self.setting == 0: self.led.color_wipe(self.led.strip, Color(128,128,128))
+        if self.setting == 1: self.led.color_wipe(self.led.strip, Color(0,0,255))
+        if self.setting == 2: self.led.color_wipe(self.led.strip, Color(255,0,0))
 
     def run(self):
         # set the setting
@@ -92,7 +94,7 @@ class DataCollection:
             self.setting += 1
             self.setting_recollor()
             threading.Thread(target=self.buzzer.run_seconds, args=(1,)).start()
-            if self.setting = 1:
+            if self.setting == 1:
                 self.save_data.make_new_folder()
         self.old_option = option
 
