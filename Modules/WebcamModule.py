@@ -15,7 +15,7 @@ class Webcam:
         logging.debug(f"Webcam.get_img was called with display:{display}, size={size}")
         # get the image
         _, img = self.cap.read()
-        img = cv2.resize(img,(480,240))
+        img = cv2.resize(img,(1920,1080))
         # if you want image shown only works on rpi with screen
         if display:
             logging.debug(f"Webcam.get_img showed an image")
