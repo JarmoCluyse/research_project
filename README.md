@@ -1,3 +1,2 @@
-# research_project
-self-driving rc-car with raspberry pi
+# research_project: self-driving rc-car with raspberry pi
 
